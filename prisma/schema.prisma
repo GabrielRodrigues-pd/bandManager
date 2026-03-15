@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  name          String?
+  password_hash String
+  bands         Band[]   @relation("BandToOwner")
+  members       Member[]
+  createdAt     DateTime @default(now())
+}
+
+model Band {
+  id          String   @id @default(uuid())
+  name        String
+  ownerId     String
+  owner       User     @relation("BandToOwner", fields: [ownerId], references: [id])
+  inviteCode  String   @unique @default(uuid())
+  members     Member[]
+  songs       Song[]
+  createdAt   DateTime @default(now())
+}
+
+model Member {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  bandId String
+  band   Band   @relation(fields: [bandId], references: [id])
+  role   String // Leader, Musician, etc.
+}
+
+model Song {
+  id          String @id @default(uuid())
+  title       String
+  artist      String
+  originalKey String
+  content     String // Markdown/JSON with chords
+  bandId      String
+  band        Band   @relation(fields: [bandId], references: [id])
+}
