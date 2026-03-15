@@ -25,6 +25,7 @@ model Band {
   inviteCode  String   @unique @default(uuid())
   members     Member[]
   songs       Song[]
+  setlists    Setlist[]
   createdAt   DateTime @default(now())
 }
 
@@ -45,4 +46,29 @@ model Song {
   content     String // Markdown/JSON with chords
   bandId      String
   band        Band   @relation(fields: [bandId], references: [id])
+  setlists    SetlistSong[]
+}
+
+model Setlist {
+  id          String        @id @default(uuid())
+  title       String
+  description String?
+  date        DateTime?
+  bandId      String
+  band        Band          @relation(fields: [bandId], references: [id])
+  songs       SetlistSong[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model SetlistSong {
+  id        String   @id @default(uuid())
+  setlistId String
+  setlist   Setlist  @relation(fields: [setlistId], references: [id])
+  songId    String
+  song      Song     @relation(fields: [songId], references: [id])
+  position  Int      // The order in the setlist
+  createdAt DateTime @default(now())
+
+  @@unique([setlistId, position])
 }

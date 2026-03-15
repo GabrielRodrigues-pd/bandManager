@@ -10,6 +10,7 @@ import { socketRoutes } from './socket/sync.js';
 
 import { songRoutes } from './routes/songs.js';
 import { authRoutes } from './routes/auth.js';
+import { setlistRoutes } from './routes/setlists.js';
 import fastifyJwt from '@fastify/jwt';
 
 const app = fastify({
@@ -60,6 +61,7 @@ app.register(authRoutes);
 app.register(userRoutes);
 app.register(bandRoutes);
 app.register(songRoutes);
+app.register(setlistRoutes);
 app.register(socketRoutes);
 
 const start = async () => {
