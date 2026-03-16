@@ -77,7 +77,18 @@ export async function authRoutes(app: FastifyInstance) {
           id: true,
           email: true,
           name: true,
-          createdAt: true
+          createdAt: true,
+          members: {
+            include: {
+              band: {
+                include: {
+                  _count: {
+                    select: { members: true, songs: true }
+                  }
+                }
+              }
+            }
+          }
       }
     });
 

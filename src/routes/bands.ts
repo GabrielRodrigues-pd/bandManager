@@ -4,16 +4,16 @@ import { prisma } from '../lib/prisma.js';
 
 export async function bandRoutes(app: FastifyInstance) {
   // Create Band
-  app.post('/bands', async (request, reply) => {
+  app.post('/bands', { onRequest: [(app as any).authenticate] }, async (request, reply) => {
     const createBandSchema = z.object({
       name: z.string().min(2),
-      ownerId: z.string().uuid(),
     });
 
-    const { name, ownerId } = createBandSchema.parse(request.body);
+    const { name } = createBandSchema.parse(request.body);
+    const userId = (request.user as any).sub;
 
     const owner = await prisma.user.findUnique({
-      where: { id: ownerId },
+      where: { id: userId },
     });
 
     if (!owner) {
@@ -24,10 +24,10 @@ export async function bandRoutes(app: FastifyInstance) {
     const band = await prisma.band.create({
       data: {
         name,
-        ownerId,
+        ownerId: userId,
         members: {
           create: {
-            userId: ownerId,
+            userId: userId,
             role: 'Leader',
           },
         },
