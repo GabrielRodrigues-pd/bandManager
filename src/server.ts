@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { userRoutes } from './routes/users.js';
 import { bandRoutes } from './routes/bands.js';
 
-import fastifySocketIO from 'fastify-socket.io';
+import fastifySocketIO from '@wick_studio/fastify-socket.io';
 
 import { socketRoutes } from './socket/sync.js';
 
