@@ -12,9 +12,15 @@ import { songRoutes } from './routes/songs.js';
 import { authRoutes } from './routes/auth.js';
 import { setlistRoutes } from './routes/setlists.js';
 import fastifyJwt from '@fastify/jwt';
+import fastifyCors from '@fastify/cors';
 
 const app = fastify({
   logger: true,
+});
+
+// Register CORS
+app.register(fastifyCors, {
+  origin: true, // This allows all origins, you can restrict it to http://localhost:3001 later
 });
 
 // Register JWT
